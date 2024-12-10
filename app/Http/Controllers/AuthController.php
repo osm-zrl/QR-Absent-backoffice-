@@ -20,7 +20,8 @@ class AuthController extends Controller
     /**
      * Create user
      *
-     * @param  [string] name
+     * @param  [string] nom
+     * @param  [string] prenom
      * @param  [string] email
      * @param  [string] password
      * @param  [string] password_confirmation
@@ -29,14 +30,16 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
+            'nom' => 'required|string',
+            'prenom' => 'required|string',
             'email' => 'required|string|unique:users',
             'password' => 'required|string',
             'c_password' => 'required|same:password'
         ]);
 
         $user = new User([
-            'name' => $request->name,
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
