@@ -69,4 +69,16 @@ class User extends Authenticatable
     {
         return $this->morphTo();
     }
+
+    public function schoolSessions(): HasMany
+    {
+        return $this->hasMany(SchoolSession::class);
+    }
+
+    public function attendanceRecords(): HasMany
+    {
+        return $this->hasMany(AttendanceRecord::class);
+    }
+
+    
 }

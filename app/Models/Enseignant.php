@@ -11,8 +11,5 @@ class Enseignant extends Model
         return $this->morphOne(User::class, 'userable');
     }
 
-    public function schoolSessions(): HasMany
-    {
-        return $this->hasMany(SchoolSession::class);
-    }
+    
 }

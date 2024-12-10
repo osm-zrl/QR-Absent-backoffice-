@@ -5,6 +5,6 @@
 
     </head>
     <body >
-        <p>Hello</p>
+        <p>QR absent Backend</p>
     </body>
 </html>

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('attendance_records', function (Blueprint $table) {
             $table->id();
             $table->foreignId('school_sessions_id')->constrained('school_sessions')->onDelete('cascade'); // Référence à la table sessions
-            $table->foreignId('etudiant_id')->constrained('etudiants')->onDelete('cascade'); // Référence à la table etudiants
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Référence à la table etudiants
             $table->timestamp('timestamp'); // Heure de l'enregistrement
             $table->timestamps();
         });

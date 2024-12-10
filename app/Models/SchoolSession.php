@@ -6,13 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class SchoolSession extends Model
 {
-    public function enseignant(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Enseignant::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function attendanceRecords(): HasMany
-    {
-        return $this->hasMany(AttendanceRecord::class);
-    }
+    
+
+    
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('intitule');
             $table->date('date');
             $table->integer('period'); // Durée en minutes, par exemple
-            $table->foreignId('enseignant_id')->constrained('enseignants')->onDelete('cascade'); // Référence à la table enseignants
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

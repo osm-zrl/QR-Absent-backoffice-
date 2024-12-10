@@ -11,8 +11,5 @@ class Etudiant extends Model
         return $this->morphOne(User::class, 'userable');
     }
 
-    public function attendanceRecords(): HasMany
-    {
-        return $this->hasMany(AttendanceRecord::class);
-    }
+    
 }
