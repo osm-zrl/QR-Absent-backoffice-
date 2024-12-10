@@ -13,6 +13,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Etudiant;
 use Validator;
 
 class AuthController extends Controller
@@ -28,32 +29,67 @@ class AuthController extends Controller
      * @return [string] message
      */
     public function register(Request $request)
-    {
+    {   
+
+        //return response()->json($request);
+        
         $request->validate([
             'nom' => 'required|string',
             'prenom' => 'required|string',
-            'email' => 'required|string|unique:users',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|string',
-            'c_password' => 'required|same:password'
+            'c_password' => 'required|same:password',
+            'is_enseignant' => 'required|in:true,false',
+            'CNE' => $request->is_enseignant === 'false' ? 'required|string|unique:etudiants,id' : 'nullable|string',
         ]);
-
-        $user = new User([
+    
+        // Cast is_enseignant to boolean (ensures it is stored as true or false)
+        $isEnseignant = filter_var($request->is_enseignant, FILTER_VALIDATE_BOOLEAN);
+        
+        
+        $user = User::create([
             'nom' => $request->nom,
             'prenom' => $request->prenom,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'is_enseignant' => $isEnseignant,
         ]);
 
         if ($user->save()) {
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->plainTextToken;
 
-            return response()->json([
-                'message' => 'Successfully created user!',
-                'accessToken' => $token,
-            ], 201);
+            //Creating enseignant or student 
+
+            if (!$user->is_enseignant){
+                if(!$request->CNE){
+                    return response()->json(500,['error' => 'Provide proper details: CNE']);
+                }
+
+                $etudiant = Etudiant::create([
+                    'id' => $request->CNE,
+                    'user_id' => $user->id
+                ]);
+
+                if(!$etudiant->save()){
+                    $user->delete();
+                }
+
+                return response()->json([
+                    'message' => 'Successfully created student!',
+                    'accessToken' => $token,
+                ], 201);
+
+            }else{
+                return response()->json([
+                    'message' => 'Successfully created Enseignat!',
+                    'accessToken' => $token,
+                ], 201);
+            }
+
+            
         } else {
-            return response()->json(['error' => 'Provide proper details']);
+            return response()->json(500,['error' => 'Provide proper details']);
         }
     }
 
@@ -70,7 +106,7 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
-            'remember_me' => 'boolean'
+            'remember_me' => 'string|in:true,false'
         ]);
 
         $credentials = request(['email', 'password']);
