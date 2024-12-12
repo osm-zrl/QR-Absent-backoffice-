@@ -135,7 +135,22 @@ class AuthController extends Controller
      */
     public function user(Request $request)
     {
-        return response()->json($request->user());
+        $user = $request->user();
+
+
+        // If the user is an enseignant, load the related Etudiant
+        if ($user->is_enseignant!=1) {
+            
+            $etudiant = $user->etudiant()->first();
+            
+            if ($etudiant) {
+                $user->CNE = $etudiant->id;
+            }
+        }
+
+        $user->is_enseignant = (bool) $user->is_enseignant;
+
+        return response()->json($user);
     }
 
 

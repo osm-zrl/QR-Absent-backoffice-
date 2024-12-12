@@ -30,6 +30,7 @@ class User extends Authenticatable
         'prenom',
         'email',
         'password',
+        'CNE',
         'is_enseignant'
     ];
 
@@ -67,9 +68,9 @@ class User extends Authenticatable
         ];
     }
 
-    public function userable(): MorphTo
+    public function etudiant()
     {
-        return $this->morphTo();
+        return $this->hasOne(Etudiant::class, 'user_id');
     }
 
     public function schoolSessions(): HasMany
