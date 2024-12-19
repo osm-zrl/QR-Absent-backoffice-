@@ -3,11 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-
-/* Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum'); */
-
+use App\Http\Middleware\IsTeacher;
+use App\Http\Controllers\SessionController;
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -18,3 +15,23 @@ Route::group(['prefix' => 'auth'], function () {
       Route::get('user', [AuthController::class, 'user']);
     });
 });
+
+
+
+
+//Teacher's Routes
+Route::middleware(['auth:sanctum','authTeacher'])->group(function () {
+  
+  //create session
+  Route::post('/session',[SessionController::class,'create']);
+
+  //get sessions
+  Route::get('/session',[SessionController::class,'index']);
+});
+
+//Student's Routes
+Route::middleware(['auth:sanctum','authStudent'])->group(function () {
+  Route::post('/session/register',[SessionController::class,'register']);
+});
+
+
