@@ -16,7 +16,7 @@ class AttendanceRecord extends Model
     }
 
 
-    public function session(): BelongsTo
+    public function session()
     {
         return $this->belongsTo(SchoolSession::class, 'school_session_id');
     }
