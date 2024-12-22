@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 
 class SchoolSession extends Model
 {   
@@ -13,9 +15,9 @@ class SchoolSession extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function attendanceRecords()
+    public function attendanceRecords(): HasMany
     {
-        return $this->hasMany(AttendanceRecord::class, 'school_sessions_id');
+        return $this->hasMany(AttendanceRecord::class, 'school_session_id');
     }
 
     

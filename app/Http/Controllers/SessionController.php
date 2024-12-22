@@ -53,7 +53,7 @@ class SessionController extends Controller
         ->count();
 
         if($rows_count!= 0){
-            return response()->json(["message"=>"Student already registered in this Session"],400);
+            return response()->json(["message"=>"Étudiant déjà inscrit à cette session"],400);
         }
 
         $record = AttendanceRecord::create([
@@ -62,6 +62,13 @@ class SessionController extends Controller
             'timestamp'=>Carbon::now()
         ]);
 
-        return response()->json(["message"=>"Registration Successful"],200);
+        $session = SchoolSession::where('id',$request->id)->first();
+
+        return response()->json([
+            "message"=>"Inscription réussie",
+            "intitule"=>$session->intitule,
+            "date"=>$session->date,
+            "enseignant"=>$session->user()->first()->nom." ".$session->user()->first()->prenom,
+            ],200);
     }
 }
